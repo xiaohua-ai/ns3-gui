@@ -1,0 +1,53 @@
+{
+  "projectName": "案例_实时响应与时钟同步",
+  "version": "0.1.0",
+  "createdAt": "2026-09-18T00:00:00.000Z",
+  "nodes": [
+    {
+      "id": "pdc",
+      "name": "保护测控装置",
+      "kind": "ied",
+      "x": 240,
+      "y": 340,
+      "apps": [
+        { "id": "app1", "role": "SERVER", "protocol": "CUSTOM", "port": 502 }
+      ]
+    },
+    {
+      "id": "ied1",
+      "name": "线路保护IED",
+      "kind": "ied",
+      "x": 900,
+      "y": 160,
+      "apps": [
+        { "id": "app2", "role": "CLIENT", "protocol": "CUSTOM", "port": 502, "peer": "pdc", "interval": 0.02, "payloadSize": 60 }
+      ]
+    },
+    {
+      "id": "ied2",
+      "name": "主变保护IED",
+      "kind": "ied",
+      "x": 900,
+      "y": 520,
+      "apps": [
+        { "id": "app3", "role": "CLIENT", "protocol": "CUSTOM", "port": 502, "peer": "pdc", "interval": 0.02, "payloadSize": 60 }
+      ]
+    }
+  ],
+  "links": [
+    { "id": "l1", "kind": "p2p", "nodeA": "pdc", "nodeB": "ied1", "dataRate": "1Gbps", "delay": "2us" },
+    { "id": "l2", "kind": "p2p", "nodeA": "pdc", "nodeB": "ied2", "dataRate": "1Gbps", "delay": "2us" }
+  ],
+  "protocols": [
+    { "id": "c1", "type": "CUSTOM", "layer": "L3", "nodeId": "ied1", "appId": 1, "vlanId": 0 },
+    { "id": "c2", "type": "CUSTOM", "layer": "L3", "nodeId": "ied2", "appId": 1, "vlanId": 0 }
+  ],
+  "flows": [
+    { "id": "f1", "type": "CONTROL", "src": "ied1", "dst": "pdc", "interval": 0.02, "payloadSize": 60 },
+    { "id": "f2", "type": "CONTROL", "src": "ied2", "dst": "pdc", "interval": 0.02, "payloadSize": 60 }
+  ],
+  "faults": [],
+  "halfPhysical": { "taps": [], "physicalNic": "" },
+  "hil": { "timestepUs": 20 },
+  "run": { "mode": "OFFLINE", "precise": false, "clockSource": "PTP", "stopSeconds": 10, "syncMode": "HARD_LIMIT" }
+}

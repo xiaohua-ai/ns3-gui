@@ -1,0 +1,36 @@
+{
+  "projectName": "案例_P2P主从UDP",
+  "version": "0.1.0",
+  "createdAt": "2026-09-18T00:00:00.000Z",
+  "nodes": [
+    {
+      "id": "1",
+      "name": "主机_1",
+      "kind": "host",
+      "x": 240,
+      "y": 340,
+      "apps": [
+        { "id": "app1", "role": "CLIENT", "protocol": "CUSTOM", "port": 502, "peer": "2", "interval": 1, "payloadSize": 512 }
+      ]
+    },
+    {
+      "id": "2",
+      "name": "主机_2",
+      "kind": "host",
+      "x": 780,
+      "y": 340,
+      "apps": [
+        { "id": "app2", "role": "SERVER", "protocol": "CUSTOM", "port": 502 }
+      ]
+    }
+  ],
+  "links": [
+    { "id": "l1", "kind": "p2p", "nodeA": "1", "nodeB": "2", "dataRate": "100Mbps", "delay": "100us" }
+  ],
+  "protocols": [],
+  "flows": [],
+  "faults": [],
+  "halfPhysical": { "taps": [], "physicalNic": "" },
+  "hil": { "timestepUs": 100 },
+  "run": { "mode": "OFFLINE", "precise": false, "clockSource": "INTERNAL", "stopSeconds": 10, "syncMode": "HARD_LIMIT" }
+}

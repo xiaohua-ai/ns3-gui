@@ -1,0 +1,66 @@
+{
+  "projectName": "案例_GOOSE组播变电站",
+  "version": "0.1.0",
+  "createdAt": "2026-09-18T00:00:00.000Z",
+  "nodes": [
+    {
+      "id": "ied1",
+      "name": "保护IED_1",
+      "kind": "ied",
+      "x": 200,
+      "y": 260
+    },
+    {
+      "id": "ied2",
+      "name": "保护IED_2",
+      "kind": "ied",
+      "x": 200,
+      "y": 760
+    },
+    {
+      "id": "switch1",
+      "name": "过程总线交换机",
+      "kind": "switch",
+      "x": 760,
+      "y": 500
+    },
+    {
+      "id": "mu1",
+      "name": "合并单元MU",
+      "kind": "ied",
+      "x": 1320,
+      "y": 260
+    },
+    {
+      "id": "pdc",
+      "name": "保护测控装置",
+      "kind": "ied",
+      "x": 1320,
+      "y": 760,
+      "apps": [
+        { "id": "app_pdc", "role": "SERVER", "protocol": "MMS", "port": 102 }
+      ],
+      "stats": ["rx_packets", "rx_bytes", "pdr", "delay_mean", "delay_jitter"]
+    }
+  ],
+  "links": [
+    { "id": "l1", "kind": "csma", "nodeA": "ied1", "nodeB": "switch1", "dataRate": "100Mbps", "delay": "10us" },
+    { "id": "l2", "kind": "csma", "nodeA": "ied2", "nodeB": "switch1", "dataRate": "100Mbps", "delay": "10us" },
+    { "id": "l3", "kind": "csma", "nodeA": "switch1", "nodeB": "mu1", "dataRate": "1Gbps", "delay": "5us" },
+    { "id": "l4", "kind": "csma", "nodeA": "switch1", "nodeB": "pdc", "dataRate": "1Gbps", "delay": "5us" }
+  ],
+  "protocols": [
+    { "id": "g1", "type": "GOOSE", "layer": "L2", "nodeId": "ied1", "appId": 4097, "vlanId": 2 },
+    { "id": "g2", "type": "GOOSE", "layer": "L2", "nodeId": "ied2", "appId": 4098, "vlanId": 2 },
+    { "id": "s1", "type": "MMS", "layer": "L3", "nodeId": "pdc", "appId": 1, "vlanId": 0 }
+  ],
+  "flows": [
+    { "id": "f1", "type": "PERIODIC", "src": "ied1", "dst": "pdc", "interval": 0.02, "payloadSize": 60 },
+    { "id": "f2", "type": "PERIODIC", "src": "ied2", "dst": "pdc", "interval": 0.02, "payloadSize": 60 },
+    { "id": "f3", "type": "PERIODIC", "src": "mu1", "dst": "pdc", "interval": 0.004, "payloadSize": 120 }
+  ],
+  "faults": [],
+  "halfPhysical": { "taps": [], "physicalNic": "" },
+  "hil": { "timestepUs": 100 },
+  "run": { "mode": "OFFLINE", "precise": false, "clockSource": "INTERNAL", "stopSeconds": 10, "syncMode": "HARD_LIMIT" }
+}

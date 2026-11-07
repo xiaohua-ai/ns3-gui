@@ -1,0 +1,49 @@
+{
+  "projectName": "案例_P2P串行接入",
+  "version": "0.1.0",
+  "createdAt": "2026-09-18T00:00:00.000Z",
+  "nodes": [
+    {
+      "id": "1",
+      "name": "主站",
+      "kind": "ied",
+      "x": 140,
+      "y": 300,
+      "apps": [
+        { "id": "app1", "role": "SERVER", "protocol": "MMS", "port": 502 }
+      ]
+    },
+    {
+      "id": "2",
+      "name": "终端_1",
+      "kind": "rtu",
+      "x": 520,
+      "y": 300,
+      "apps": [
+        { "id": "app2", "role": "CLIENT", "protocol": "MMS", "port": 502, "peer": "1", "interval": 2, "payloadSize": 128 }
+      ]
+    },
+    {
+      "id": "3",
+      "name": "终端_2",
+      "kind": "host",
+      "x": 900,
+      "y": 300,
+      "apps": [
+        { "id": "app3", "role": "CLIENT", "protocol": "CUSTOM", "port": 502, "peer": "1", "interval": 1, "payloadSize": 512 }
+      ]
+    }
+  ],
+  "links": [
+    { "id": "l1", "kind": "p2p", "nodeA": "1", "nodeB": "2", "dataRate": "100Mbps", "delay": "100us" },
+    { "id": "l2", "kind": "p2p", "nodeA": "2", "nodeB": "3", "dataRate": "10Mbps", "delay": "2ms", "jitter": "1ms", "errorRate": 0.001 }
+  ],
+  "protocols": [],
+  "flows": [],
+  "faults": [
+    { "id": "f1", "kind": "error-model", "linkId": "l2", "startTime": 5, "endTime": 8, "rate": 0.05 }
+  ],
+  "halfPhysical": { "taps": [], "physicalNic": "" },
+  "hil": { "timestepUs": 100 },
+  "run": { "mode": "OFFLINE", "precise": false, "clockSource": "INTERNAL", "stopSeconds": 10, "syncMode": "HARD_LIMIT" }
+}

@@ -1,0 +1,96 @@
+{
+  "projectName": "案例_微电网分布式能源通信",
+  "version": "0.1.0",
+  "createdAt": "2026-09-18T00:00:00.000Z",
+  "nodes": [
+    {
+      "id": "mgcc",
+      "name": "微电网中央控制器",
+      "kind": "ied",
+      "x": 260,
+      "y": 500,
+      "apps": [
+        { "id": "app_mgcc", "role": "CLIENT", "protocol": "MODBUS_TCP", "port": 502, "peer": "pv1", "interval": 0.5, "payloadSize": 96 }
+      ],
+      "stats": ["tx_packets", "pdr"]
+    },
+    {
+      "id": "pv1",
+      "name": "光伏电站_PV1",
+      "kind": "pv",
+      "x": 620,
+      "y": 160,
+      "apps": [
+        { "id": "app_pv", "role": "SERVER", "protocol": "MODBUS_TCP", "port": 502 }
+      ],
+      "stats": ["rx_packets", "pdr"]
+    },
+    {
+      "id": "wt1",
+      "name": "风电机组_WT1",
+      "kind": "pv",
+      "x": 900,
+      "y": 160,
+      "apps": [
+        { "id": "app_wt", "role": "SERVER", "protocol": "MODBUS_TCP", "port": 502 }
+      ],
+      "stats": ["rx_packets"]
+    },
+    {
+      "id": "ess1",
+      "name": "储能电站_ESS1",
+      "kind": "ess",
+      "x": 620,
+      "y": 840,
+      "apps": [
+        { "id": "app_ess", "role": "SERVER", "protocol": "MODBUS_TCP", "port": 502 }
+      ],
+      "stats": ["rx_packets", "pdr"]
+    },
+    {
+      "id": "load1",
+      "name": "用户负荷_LOAD1",
+      "kind": "load",
+      "x": 900,
+      "y": 840,
+      "apps": [
+        { "id": "app_load", "role": "SERVER", "protocol": "MODBUS_TCP", "port": 502 }
+      ],
+      "stats": ["rx_packets"]
+    },
+    {
+      "id": "cp1",
+      "name": "充电桩_CP1",
+      "kind": "load",
+      "x": 1240,
+      "y": 500,
+      "apps": [
+        { "id": "app_cp", "role": "SERVER", "protocol": "MODBUS_TCP", "port": 502 }
+      ],
+      "stats": ["rx_packets"]
+    }
+  ],
+  "links": [
+    { "id": "l1", "kind": "p2p", "nodeA": "mgcc", "nodeB": "pv1", "dataRate": "100Mbps", "delay": "200us" },
+    { "id": "l2", "kind": "p2p", "nodeA": "mgcc", "nodeB": "wt1", "dataRate": "100Mbps", "delay": "300us" },
+    { "id": "l3", "kind": "p2p", "nodeA": "mgcc", "nodeB": "ess1", "dataRate": "100Mbps", "delay": "200us" },
+    { "id": "l4", "kind": "p2p", "nodeA": "mgcc", "nodeB": "load1", "dataRate": "10Mbps", "delay": "500us" },
+    { "id": "l5", "kind": "p2p", "nodeA": "mgcc", "nodeB": "cp1", "dataRate": "10Mbps", "delay": "400us" }
+  ],
+  "protocols": [
+    { "id": "m1", "type": "MODBUS_TCP", "layer": "L3", "nodeId": "mgcc", "appId": 1, "vlanId": 0 },
+    { "id": "m2", "type": "MODBUS_RTU", "layer": "L2", "nodeId": "pv1", "appId": 1, "vlanId": 0 },
+    { "id": "m3", "type": "MODBUS_TCP", "layer": "L3", "nodeId": "ess1", "appId": 1, "vlanId": 0 }
+  ],
+  "flows": [
+    { "id": "f1", "type": "PERIODIC", "src": "mgcc", "dst": "pv1", "interval": 0.5, "payloadSize": 96 },
+    { "id": "f2", "type": "PERIODIC", "src": "mgcc", "dst": "wt1", "interval": 0.5, "payloadSize": 96 },
+    { "id": "f3", "type": "PERIODIC", "src": "mgcc", "dst": "ess1", "interval": 0.5, "payloadSize": 96 },
+    { "id": "f4", "type": "PERIODIC", "src": "mgcc", "dst": "load1", "interval": 2, "payloadSize": 64 },
+    { "id": "f5", "type": "PERIODIC", "src": "mgcc", "dst": "cp1", "interval": 2, "payloadSize": 64 }
+  ],
+  "faults": [],
+  "halfPhysical": { "taps": [], "physicalNic": "" },
+  "hil": { "timestepUs": 100 },
+  "run": { "mode": "OFFLINE", "precise": false, "clockSource": "INTERNAL", "stopSeconds": 10, "syncMode": "HARD_LIMIT" }
+}

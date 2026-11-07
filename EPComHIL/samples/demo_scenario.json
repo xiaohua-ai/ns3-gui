@@ -1,0 +1,33 @@
+{
+  "projectName": "demo_scenario",
+  "version": "0.1.0",
+  "createdAt": "2026-09-17T00:00:00.000Z",
+  "nodes": [
+    { "id": "ied1", "name": "IED_A", "kind": "ied", "x": 60, "y": 60 },
+    { "id": "switch1", "name": "SW_1", "kind": "switch", "x": 300, "y": 60 },
+    { "id": "rtu1", "name": "RTU_1", "kind": "rtu", "physical": true, "physicalId": "dev:rtu-01", "x": 120, "y": 260 },
+    { "id": "pv1", "name": "光伏逆变器_1", "kind": "pv", "x": 320, "y": 270 }
+  ],
+  "links": [
+    { "id": "l1", "kind": "p2p", "nodeA": "ied1", "nodeB": "switch1", "dataRate": "100Mbps", "delay": "100us" },
+    { "id": "l2", "kind": "csma", "nodeA": "switch1", "nodeB": "rtu1", "dataRate": "100Mbps" },
+    { "id": "l3", "kind": "p2p", "nodeA": "switch1", "nodeB": "pv1" }
+  ],
+  "protocols": [
+    { "id": "p1", "type": "GOOSE", "layer": "L2", "nodeId": "ied1", "appId": 4097, "vlanId": 2 },
+    { "id": "p2", "type": "MODBUS_TCP", "layer": "L3", "nodeId": "rtu1", "localPort": 502 }
+  ],
+  "flows": [
+    { "id": "f1", "type": "PERIODIC", "src": "ied1", "dst": "rtu1", "interval": 1, "payloadSize": 512 },
+    { "id": "f2", "type": "EVENT", "src": "pv1", "dst": "rtu1", "interval": 5, "payloadSize": 128 }
+  ],
+  "faults": [
+    { "id": "fa1", "linkId": "l2", "startTime": 3, "endTime": 6, "kind": "error-model", "rate": 0.01 }
+  ],
+  "halfPhysical": {
+    "taps": [{ "tapName": "tap0", "nodeId": "rtu1", "mac": "00:11:22:33:44:55" }],
+    "physicalNic": "eth0"
+  },
+  "hil": { "timestepUs": 100 },
+  "run": { "mode": "OFFLINE", "precise": false, "clockSource": "INTERNAL", "stopSeconds": 10, "syncMode": "HARD_LIMIT" }
+}

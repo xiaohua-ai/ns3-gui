@@ -1,0 +1,53 @@
+{
+  "projectName": "案例_CSMA单子网",
+  "version": "0.1.0",
+  "createdAt": "2026-09-19T00:00:00.000Z",
+  "nodes": [
+    {
+      "id": "sta1",
+      "name": "终端_1",
+      "kind": "host",
+      "x": 160,
+      "y": 220,
+      "apps": [
+        { "id": "app1", "role": "SERVER", "protocol": "CUSTOM", "port": 502 }
+      ],
+      "stats": ["tx_packets", "rx_packets", "rx_bytes", "pdr", "delay_mean", "delay_jitter"]
+    },
+    {
+      "id": "sta2",
+      "name": "终端_2",
+      "kind": "host",
+      "x": 160,
+      "y": 380,
+      "apps": [
+        { "id": "app2", "role": "CLIENT", "protocol": "CUSTOM", "port": 502, "peer": "sta1", "interval": 0.25, "payloadSize": 96 }
+      ],
+      "stats": ["tx_packets", "pdr"]
+    },
+    {
+      "id": "sta3",
+      "name": "终端_3",
+      "kind": "host",
+      "x": 160,
+      "y": 540,
+      "apps": [
+        { "id": "app3", "role": "CLIENT", "protocol": "CUSTOM", "port": 502, "peer": "sta1", "interval": 0.5, "payloadSize": 64 }
+      ],
+      "stats": ["rx_packets"]
+    }
+  ],
+  "links": [
+    { "id": "l1", "kind": "csma", "nodeA": "sta1", "nodeB": "sta2", "dataRate": "10Mbps", "delay": "500us" },
+    { "id": "l2", "kind": "csma", "nodeA": "sta2", "nodeB": "sta3", "dataRate": "10Mbps", "delay": "500us" }
+  ],
+  "protocols": [],
+  "flows": [
+    { "id": "f1", "type": "CBR", "src": "sta2", "dst": "sta1", "interval": 0.25, "payloadSize": 96 },
+    { "id": "f2", "type": "PERIODIC", "src": "sta3", "dst": "sta1", "interval": 0.5, "payloadSize": 64 }
+  ],
+  "faults": [],
+  "halfPhysical": { "taps": [], "physicalNic": "" },
+  "hil": { "timestepUs": 100 },
+  "run": { "mode": "OFFLINE", "precise": false, "clockSource": "INTERNAL", "stopSeconds": 10, "syncMode": "HARD_LIMIT" }
+}

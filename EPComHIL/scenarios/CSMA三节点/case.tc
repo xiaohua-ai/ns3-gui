@@ -1,0 +1,44 @@
+{
+  "projectName": "案例_CSMA三节点",
+  "version": "0.1.0",
+  "createdAt": "2026-09-18T00:00:00.000Z",
+  "nodes": [
+    {
+      "id": "1",
+      "name": "IED_1",
+      "kind": "ied",
+      "x": 160,
+      "y": 300,
+      "apps": [
+        { "id": "app1", "role": "SERVER", "protocol": "MODBUS_TCP", "port": 502 }
+      ]
+    },
+    {
+      "id": "2",
+      "name": "交换机_1",
+      "kind": "switch",
+      "x": 520,
+      "y": 300
+    },
+    {
+      "id": "3",
+      "name": "主机_3",
+      "kind": "host",
+      "x": 880,
+      "y": 300,
+      "apps": [
+        { "id": "app3", "role": "CLIENT", "protocol": "MODBUS_TCP", "port": 502, "peer": "1", "interval": 0.5, "payloadSize": 64 }
+      ]
+    }
+  ],
+  "links": [
+    { "id": "l1", "kind": "csma", "nodeA": "1", "nodeB": "2", "dataRate": "10Mbps", "delay": "1ms" },
+    { "id": "l2", "kind": "csma", "nodeA": "2", "nodeB": "3", "dataRate": "10Mbps", "delay": "1ms" }
+  ],
+  "protocols": [],
+  "flows": [],
+  "faults": [],
+  "halfPhysical": { "taps": [], "physicalNic": "" },
+  "hil": { "timestepUs": 100 },
+  "run": { "mode": "OFFLINE", "precise": false, "clockSource": "INTERNAL", "stopSeconds": 10, "syncMode": "HARD_LIMIT" }
+}

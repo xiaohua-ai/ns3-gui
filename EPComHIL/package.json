@@ -1,0 +1,60 @@
+{
+  "name": "epcomhil",
+  "version": "0.2.0",
+  "description": "EPComHIL 电力通信融合硬件在环仿真平台 - Windows 上位机先行版",
+  "main": "electron/main.cjs",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently -k -s first \"npm:dev:renderer\" \"npm:electron:dev\"",
+    "dev:renderer": "vite",
+    "electron:dev": "wait-on tcp:localhost:5173 && cross-env ELECTRON_START_URL=http://localhost:5173 electron . --user-data-dir=.electron-dev-data --disable-spell-checking --force-color-profile=srgb",
+    "vite:build": "vite build",
+    "typecheck": "vue-tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "build": "npm run vite:build && electron-builder",
+    "pack:dir": "npm run vite:build && electron-builder --dir"
+  },
+  "dependencies": {
+    "@antv/x6": "^2.18.1",
+    "@antv/x6-plugin-dnd": "^2.1.1",
+    "@element-plus/icons-vue": "^2.3.1",
+    "echarts": "^5.5.1",
+    "element-plus": "^2.8.8",
+    "pinia": "^2.2.8",
+    "ssh2": "^1.17.0",
+    "vue": "^3.5.13",
+    "vue-router": "^4.4.5"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.2.1",
+    "concurrently": "^9.1.0",
+    "cross-env": "^7.0.3",
+    "electron": "^33.2.1",
+    "electron-builder": "^25.1.8",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.5",
+    "vitest": "^2.1.8",
+    "vue-tsc": "^2.1.10",
+    "wait-on": "^8.0.1"
+  },
+  "build": {
+    "appId": "com.epcomhil.platform",
+    "productName": "EPComHIL",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist-renderer/**/*",
+      "electron/**/*"
+    ],
+    "win": {
+      "target": "nsis"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
+  }
+}

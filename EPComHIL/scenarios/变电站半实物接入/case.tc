@@ -1,0 +1,65 @@
+{
+  "projectName": "案例_变电站半实物接入",
+  "version": "0.1.0",
+  "createdAt": "2026-09-18T00:00:00.000Z",
+  "nodes": [
+    {
+      "id": "rtu1",
+      "name": "RTU_真实设备",
+      "kind": "rtu",
+      "x": 260,
+      "y": 260,
+      "physical": true,
+      "physicalId": "dev:rtu-01",
+      "apps": [
+        { "id": "app_rtu", "role": "SERVER", "protocol": "MMS", "port": 502 }
+      ],
+      "stats": ["rx_packets", "pdr"]
+    },
+    {
+      "id": "switch1",
+      "name": "站内交换机",
+      "kind": "switch",
+      "x": 760,
+      "y": 500
+    },
+    {
+      "id": "ied1",
+      "name": "仿真保护IED",
+      "kind": "ied",
+      "x": 1260,
+      "y": 260
+    },
+    {
+      "id": "pdc",
+      "name": "仿真监控后台",
+      "kind": "host",
+      "x": 1260,
+      "y": 760,
+      "apps": [
+        { "id": "app_pdc", "role": "SERVER", "protocol": "MMS", "port": 502 }
+      ],
+      "stats": ["rx_packets", "rx_bytes"]
+    }
+  ],
+  "links": [
+    { "id": "l1", "kind": "csma", "nodeA": "rtu1", "nodeB": "switch1", "dataRate": "100Mbps", "delay": "30us" },
+    { "id": "l2", "kind": "csma", "nodeA": "switch1", "nodeB": "ied1", "dataRate": "100Mbps", "delay": "5us" },
+    { "id": "l3", "kind": "csma", "nodeA": "switch1", "nodeB": "pdc", "dataRate": "100Mbps", "delay": "5us" }
+  ],
+  "protocols": [
+    { "id": "mm1", "type": "MMS", "layer": "L3", "nodeId": "pdc", "appId": 1, "vlanId": 0 },
+    { "id": "g1", "type": "GOOSE", "layer": "L2", "nodeId": "ied1", "appId": 4097, "vlanId": 2 }
+  ],
+  "flows": [
+    { "id": "f1", "type": "PERIODIC", "src": "ied1", "dst": "pdc", "interval": 0.02, "payloadSize": 60 },
+    { "id": "f2", "type": "CONTROL", "src": "pdc", "dst": "rtu1", "interval": 1, "payloadSize": 80 }
+  ],
+  "faults": [],
+  "halfPhysical": {
+    "taps": [{ "tapName": "tap0", "nodeId": "rtu1", "mac": "00:11:22:33:44:55" }],
+    "physicalNic": "eth0"
+  },
+  "hil": { "timestepUs": 100 },
+  "run": { "mode": "HIL", "precise": false, "clockSource": "PTP", "stopSeconds": 10, "syncMode": "HARD_LIMIT" }
+}

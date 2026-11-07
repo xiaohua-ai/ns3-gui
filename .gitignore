@@ -1,0 +1,26 @@
+# ===== 第三方 ns-3 / 网络可视化工具（本地参考，不纳入版本控制）=====
+NetSimulyzer-ns3-module/
+NS3-GUI-Helper/
+WiFiViz/
+
+# ===== 依赖与构建产物 =====
+node_modules/
+.npm-cache/
+.npm_cache/
+dist-renderer/
+dist-electron/
+release/
+dist/
+.npm_cache/
+.electron-cache/
+.electron-dev-data/
+*.log
+.DS_Store
+*.local
+
+# ===== 临时文件 =====
+.tmp*
+
+# ===== 隐私 / 本地记忆（不纳入版本控制）=====
+.workbuddy/
+.env
